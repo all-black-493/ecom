@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Curated essentials. Honest pricing.</h1>
+  <p>Browse the catalog, place orders, and explore the analytics behind every decision.</p>
+  <div class="hero-actions">
+    <a class="btn primary" href="/catalog">Shop catalog</a>
+    <a class="btn ghost" href="/dashboards">View dashboards</a>
+  </div>
+</section>
+
+<section class="row">
+  <h2>Categories</h2>
+  <div class="grid grid-6">
+    {% for c in categories %}
+    <a class="card category" href="/catalog?category_id={{ c.id }}">
+      <span>{{ c.name }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="row">
+  <h2>Featured</h2>
+  <div class="grid grid-4">
+    {% for p in featured %}
+    <div class="card product">
+      <div class="product-name">{{ p.name }}</div>
+      <div class="product-brand">{{ p.brand }}</div>
+      <div class="product-price">${{ "%.2f"|format(p.price) }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

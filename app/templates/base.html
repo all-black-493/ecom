@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Lumen Commerce{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand">Lumen</a>
+    <nav>
+      <a href="/catalog">Catalog</a>
+      <a href="/dashboards">Dashboards</a>
+      <a href="/docs">API docs</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <span>Lumen Commerce — reference implementation</span>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,43 @@
+# Cloud Build pipeline for the Lumen app.
+#
+# Invoked by `make image PROJECT_ID=… REGION=…`. The Makefile passes the
+# fully-qualified Artifact Registry image tag as the _IMAGE substitution.
+#
+# Why this file exists: `gcloud builds submit --tag` only accepts a Dockerfile
+# at the source root. We keep ours under deploy/ for separation, so we use
+# `--config` to point at this file, which can reference any Dockerfile path.
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      # --no-cache forces every layer to be rebuilt from source. Slower (~30s
+      # more) but eliminates an entire class of "I changed the code but the
+      # image doesn't have it" bugs caused by stale layer reuse on the
+      # Cloud Build daemon.
+      - --no-cache
+      - --file=deploy/Dockerfile
+      - --tag=${_IMAGE}
+      - --tag=${_IMAGE_LATEST}
+      - .
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: [push, --all-tags, "${_IMAGE_REPO}"]
+
+# Tell Cloud Build to record the pushed images on the build record.
+images:
+  - ${_IMAGE}
+  - ${_IMAGE_LATEST}
+
+# Defaults; the Makefile overrides _IMAGE/_IMAGE_LATEST/_IMAGE_REPO.
+substitutions:
+  _IMAGE: ""
+  _IMAGE_LATEST: ""
+  _IMAGE_REPO: ""
+
+options:
+  # E2_HIGHCPU_8 is overkill for a small Python image but cuts build time in half
+  # over the default — and Cloud Build bills by the second, so it ends up cheaper.
+  machineType: E2_HIGHCPU_8
+  logging: CLOUD_LOGGING_ONLY

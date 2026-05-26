@@ -1,0 +1,99 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lumen-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-lumen}
+      POSTGRES_USER: ${POSTGRES_USER:-lumen}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lumen}
+    ports:
+      - "5432:5432"
+    volumes:
+      - lumen_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lumen}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    container_name: lumen-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-lumen}:${POSTGRES_PASSWORD:-lumen}@postgres:5432/${POSTGRES_DB:-lumen}
+      CUBEJS_API_URL: http://cube:4000/cubejs-api/v1
+      CUBE_API_SECRET: ${CUBE_API_SECRET:-cube-secret-change-me}
+      APP_SECRET: ${APP_SECRET:-dev-secret}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/code/app
+      - ./scripts:/code/scripts
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  cube:
+    image: cubejs/cube:latest
+    container_name: lumen-cube
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      CUBEJS_DEV_MODE: "true"
+      CUBEJS_DB_TYPE: postgres
+      CUBEJS_DB_HOST: postgres
+      CUBEJS_DB_PORT: 5432
+      CUBEJS_DB_NAME: ${POSTGRES_DB:-lumen}
+      CUBEJS_DB_USER: ${POSTGRES_USER:-lumen}
+      CUBEJS_DB_PASS: ${POSTGRES_PASSWORD:-lumen}
+      CUBEJS_API_SECRET: ${CUBE_API_SECRET:-cube-secret-change-me}
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./cube:/cube/conf
+
+  airflow-db:
+    image: postgres:16-alpine
+    container_name: lumen-airflow-db
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - lumen_airflow_db:/var/lib/postgresql/data
+    profiles: ["airflow"]
+
+  airflow:
+    image: apache/airflow:2.10.3-python3.11
+    container_name: lumen-airflow
+    depends_on:
+      - airflow-db
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW_CONN_LUMEN_POSTGRES: postgresql://lumen:lumen@postgres:5432/lumen
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/airflow/keys/gcp-sa.json
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID:-your-gcp-project}
+      BQ_DATASET_RAW: ${BQ_DATASET_RAW:-lumen_raw}
+      # Raise gunicorn's header limit so the webserver doesn't reject browsers
+      # that have accumulated cookies for other localhost apps (FastAPI on :8000,
+      # Cube on :4000, etc.). Default is 8 KB which is too small in practice.
+      GUNICORN_CMD_ARGS: "--limit-request-line 0 --limit-request-field_size 0"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./deploy/gcp-sa.json:/opt/airflow/keys/gcp-sa.json:ro
+    command: bash -c "airflow db migrate && airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@lumen.local || true; airflow standalone"
+    profiles: ["airflow"]
+
+volumes:
+  lumen_pg:
+  lumen_airflow_db:

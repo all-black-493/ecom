@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lumen — what the data says</title>
+<style>
+  :root {
+    --bg: #fafaf8; --ink: #1a1a1a; --muted: #6b7280;
+    --accent: #0f766e; --warn: #b45309; --line: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body { font: 18px/1.55 "Inter", -apple-system, BlinkMacSystemFont, sans-serif; }
+  .slide {
+    min-height: 100vh; padding: 80px 10vw; display: flex; flex-direction: column;
+    justify-content: center; border-bottom: 1px solid var(--line);
+  }
+  .slide.title { background: var(--ink); color: var(--bg); }
+  .slide.title h1 { font-size: 56px; line-height: 1.1; margin: 0 0 16px; font-weight: 700; }
+  .slide.title p { color: #d1d5db; font-size: 22px; margin: 0; }
+  .slide h2 { font-size: 36px; margin: 0 0 24px; font-weight: 600; }
+  .slide h3 { font-size: 24px; margin: 0 0 12px; color: var(--accent); }
+  .slide p, .slide li { font-size: 20px; max-width: 70ch; }
+  .lede { font-size: 28px; line-height: 1.4; font-weight: 500; max-width: 30ch; }
+  .muted { color: var(--muted); }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin: 32px 0; }
+  .kpi { padding: 24px; border: 1px solid var(--line); border-radius: 8px; background: white; }
+  .kpi .n { font-size: 48px; font-weight: 700; color: var(--accent); }
+  .kpi .label { color: var(--muted); text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  blockquote { font-size: 28px; line-height: 1.4; border-left: 4px solid var(--accent);
+               padding-left: 24px; color: var(--ink); font-style: italic; margin: 24px 0; }
+  .chart { background: white; border: 1px solid var(--line); padding: 16px; border-radius: 8px;
+           font-family: ui-monospace, monospace; white-space: pre; color: var(--muted); }
+  .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; background: white;
+          border: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  nav.toc { position: fixed; top: 24px; right: 24px; }
+  nav.toc a { display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+              background: var(--line); margin-left: 6px; }
+  table.summary { width: 100%; border-collapse: collapse; margin-top: 24px; }
+  table.summary td, table.summary th { padding: 10px 12px; border-bottom: 1px solid var(--line);
+                                       text-align: left; font-size: 18px; }
+  table.summary th { color: var(--muted); font-weight: 500; }
+  .ask { font-size: 32px; font-weight: 600; }
+  .footnote { position: absolute; bottom: 24px; right: 10vw; color: var(--muted); font-size: 13px; }
+  @media print {
+    .slide { min-height: 0; page-break-after: always; padding: 60px; }
+    nav.toc { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="slide title">
+  <h1>What the data is telling us<br>about Lumen, this quarter.</h1>
+  <p>A story in eight charts. No SQL required.</p>
+  <p class="muted" style="margin-top:48px; font-size:16px;">Prepared for the board · May 2026</p>
+</section>
+
+<section class="slide">
+  <p class="pill">The headline</p>
+  <h2>We're growing — but the growth is concentrated.</h2>
+  <p class="lede">Revenue is up 12% versus the prior month. Most of that came from <strong>one channel</strong> and <strong>seven products</strong>. Diversification is the question we leave the room with.</p>
+</section>
+
+<section class="slide">
+  <p class="pill">Where we stand today</p>
+  <h2>The last 30 days</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="label">Revenue</div><div class="n">$342k</div><div class="muted">▲ 12% vs prior 30 days</div></div>
+    <div class="kpi"><div class="label">Orders</div><div class="n">2,810</div><div class="muted">▲ 9% vs prior 30 days</div></div>
+    <div class="kpi"><div class="label">Repeat purchase rate</div><div class="n">28.4%</div><div class="muted">▲ 1.8 pts</div></div>
+  </div>
+  <p class="muted">All three numbers point up. The next slides ask: <em>by how much should we trust them?</em></p>
+</section>
+
+<section class="slide">
+  <p class="pill">Q1 — Who's buying?</p>
+  <h2>Three channels do 70% of the work.</h2>
+  <div class="two-col">
+    <div class="chart">
+organic     ████████████████  $98k
+paid_search ███████████       $72k
+paid_social █████████         $61k
+email       ██████            $39k
+direct      ████              $28k
+referral    ███               $20k
+affiliate   █                 $9k
+    </div>
+    <div>
+      <p><strong>Organic</strong> remains our biggest channel, but <strong>paid_search</strong> is the fastest-growing — and the most expensive per dollar earned.</p>
+      <p>Email is punching above its weight: small audience, but the highest repeat rate.</p>
+      <p class="muted"><em>Decision implication:</em> the email list is a leverage point. If we doubled it we'd likely add more margin than doubling paid_search.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="pill">Q2 — What's selling?</p>
+  <h2>10% of our products generate 60% of revenue.</h2>
+  <div class="two-col">
+    <div class="chart">
+Top 12 SKUs   ████████████████████  60%
+Next 30 SKUs  ███████████           27%
+Long tail     █████                 13%
+              ↑
+       120 SKUs total
+    </div>
+    <div>
+      <p>This is the classic head-and-tail pattern. Most retailers see it.</p>
+      <p>What's noteworthy: <strong>23 of our 120 SKUs sold fewer than 5 units in 60 days</strong>. Together they hold <strong>$48,000</strong> in working capital.</p>
+      <blockquote>Every dollar tied up in a slow mover is a dollar we couldn't use to restock a hero SKU.</blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="pill">Q3 — Who comes back?</p>
+  <h2>Our Q1 cohort retains better than the Q3 cohort.</h2>
+  <p>We acquired 240 customers in Q1 of last year. Twelve months later, 34% of them placed a second order.<br>The Q3 cohort, same age now, is only at 22%.</p>
+  <div class="chart">
+Q1 2025 cohort:  ████████████████████████████████████  34%
+Q2 2025 cohort:  █████████████████████████████         28%
+Q3 2025 cohort:  ██████████████████████                22%
+Q4 2025 cohort:  ████████████████████                  19% (still maturing)
+  </div>
+  <p class="muted">Something changed between Q1 and Q3. Hypothesis: paid_social acquisitions surged in Q3 — and those customers buy once.</p>
+</section>
+
+<section class="slide">
+  <p class="pill">Q4 — What about the leaks?</p>
+  <h2>3 in 10 shoppers fill a cart and walk away.</h2>
+  <div class="two-col">
+    <div class="chart">
+   Views          ████████████████████  100%
+   Add to cart    █████                  19%
+   Checkout       ███                    13%
+   Purchase       ██                      9%
+    </div>
+    <div>
+      <p>The biggest drop is <strong>add-to-cart → checkout</strong>: customers picked the item but didn't start paying.</p>
+      <p>This funnel is the most actionable chart we have. A 1-percentage-point improvement here is worth <strong>~$35k/month</strong>.</p>
+      <p class="muted">Mobile abandonment is 8 points higher than desktop. That's where to start.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="pill">Looking forward</p>
+  <h2>What we expect, with confidence.</h2>
+  <div class="chart">
+   forecast (30 days) →
+   $          ┌────╮
+              │     ╰──╮
+   weekend    │        ╰──╮
+   peaks      │           ╰──╮     ┃
+              │              ╰──╮  ┃  prediction band
+              └──────────────────╮ ╋  (80% confidence)
+                                  ╰ ┃
+                                    ┃
+   day  ────────────────────────────────►
+  </div>
+  <p>Our model — trained on 18 months of daily sales — projects the next 30 days at <strong>$420k ± 50k</strong> in revenue.</p>
+  <p>The model accounts for: weekly cycles (weekends are 30% higher), seasonality, and recent growth trend. It does <em>not</em> know about: promotions we haven't run yet, new product launches, or external shocks. Use the band, not the point.</p>
+</section>
+
+<section class="slide">
+  <p class="pill">If we did one thing</p>
+  <h2>Mobile checkout is the lever.</h2>
+  <p class="lede">Same products. Same prices. The mobile shopper completes 8 points less often than desktop. If we close half that gap, we add roughly <strong>$50,000 per month</strong> in revenue at zero additional ad spend.</p>
+  <p class="muted">No new spend. No new SKUs. Just a checkout that doesn't lose people on the second tap.</p>
+</section>
+
+<section class="slide">
+  <p class="pill">The ask</p>
+  <h2>Three commitments for next quarter.</h2>
+  <table class="summary">
+    <tr><th>Initiative</th><th>Why</th><th>Estimated impact</th></tr>
+    <tr><td>Mobile checkout sprint</td><td>Highest-leverage funnel leak</td><td>+$40–60k / mo</td></tr>
+    <tr><td>Slow-mover clearance</td><td>Free $48k of working capital</td><td>One-time, fuels restocks</td></tr>
+    <tr><td>Email list growth (paid)</td><td>Cheapest channel by margin</td><td>Compounds; 6-mo payback</td></tr>
+  </table>
+  <p class="ask" style="margin-top:40px;">We're asking the board to approve the checkout sprint and the clearance plan. The email investment we'll size after a 30-day test.</p>
+</section>
+
+<section class="slide title">
+  <h1>Thank you.</h1>
+  <p>Questions, gut-checks, sceptical pushback — all welcome.</p>
+</section>
+
+</body>
+</html>

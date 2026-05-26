@@ -1,0 +1,70 @@
+# Files gcloud should NOT upload to Cloud Build. Same syntax as .gitignore.
+# The build context shrinks from ~880 MB to under 5 MB once this is in place.
+
+# Python virtualenvs and build artifacts
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Local Cube.dev runtime state (created by docker, owned by root, breaks read)
+cube/.cubestore/
+cube/node_modules/
+
+# Local databases / docker volumes (if they ever leak into the tree)
+*.sqlite
+*.sqlite3
+postgres-data/
+airflow-data/
+
+# Session memory written by the harness — not part of the app
+.remember/
+.agents/
+
+# IDE & OS junk
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Git history (Cloud Build doesn't need it)
+.git/
+.gitignore
+
+# Local-only env and credentials — never ship secrets to the build
+.env
+.env.local
+deploy/gcp-sa.json
+*.pem
+*.key
+
+# Generated ML output (the image doesn't need pre-computed forecasts;
+# the runtime writes them or pulls them from BigQuery)
+ml/forecast_metrics.json
+ml/forecast_categories.csv
+ml/sample_history.csv
+
+# Local logs
+*.log
+logs/
+
+# Compiled JS / TS for cube (we ship .js source, not built output)
+cube/dist/
+
+# Container-related files that don't belong inside the image itself
+docker-compose.yml
+deploy/cloud-run/
+docs/
+RUNBOOK.md
+DEMO.md
+README.md

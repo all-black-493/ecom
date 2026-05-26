@@ -1,0 +1,71 @@
+# Knative-style Cloud Run service descriptor.
+# Deploy with:
+#   gcloud run services replace deploy/cloud-run/service.yaml --region us-central1
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: lumen-app
+  annotations:
+    run.googleapis.com/launch-stage: GA
+spec:
+  template:
+    metadata:
+      annotations:
+        # Scale to zero when idle; max 4 instances under load.
+        autoscaling.knative.dev/maxScale: "4"
+        autoscaling.knative.dev/minScale: "0"
+        # Connect to Cloud SQL Postgres over the private socket.
+        run.googleapis.com/cloudsql-instances: PROJECT_ID:REGION:INSTANCE_ID
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 60
+      serviceAccountName: lumen-runtime@PROJECT_ID.iam.gserviceaccount.com
+      containers:
+        - image: REGION-docker.pkg.dev/PROJECT_ID/lumen/lumen-app:latest
+          ports:
+            - name: http1
+              containerPort: 8000
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+          env:
+            - name: APP_ENV
+              value: production
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: lumen-app-secret
+                  key: latest
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: lumen-database-url
+                  key: latest
+            - name: CUBEJS_API_URL
+              value: https://cube-lumen.example.com/cubejs-api/v1
+            - name: CUBE_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: lumen-cube-secret
+                  key: latest
+            - name: GCP_PROJECT_ID
+              value: PROJECT_ID
+            - name: BQ_DATASET_MART
+              value: lumen_mart
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            failureThreshold: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 30
+            timeoutSeconds: 5
+  traffic:
+    - percent: 100
+      latestRevision: true

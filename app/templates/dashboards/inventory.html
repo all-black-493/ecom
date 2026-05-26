@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Inventory dashboard · Lumen{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <h1>Inventory &amp; Velocity</h1>
+  <p class="muted">Fast vs slow movers, stockout risk, and the 30-day Prophet demand forecast.</p>
+</header>
+
+<section class="grid grid-2">
+  <div class="card chart-card">
+    <h3>Funnel (last 30 days)</h3>
+    <p class="muted small">From product view to purchase. Biggest drop typically at add-to-cart → checkout.</p>
+    <canvas id="funnelChart"></canvas>
+  </div>
+  <div class="card chart-card">
+    <h3>Cart abandonment rate</h3>
+    <p class="muted small">A single number — but trended over weeks it's the key UX signal.</p>
+    <div id="abandonment-rate" class="big-stat">—</div>
+    <div id="abandonment-detail" class="muted small"></div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Stockouts at risk</h3>
+  <p class="muted small">Variants whose current cover (on-hand ÷ daily velocity) is under 14 days.</p>
+  <table class="data-table" id="stockoutsTable">
+    <thead><tr><th>SKU</th><th>Variant</th><th class="num">On hand</th><th class="num">Velocity/day</th><th class="num">Days cover</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<section class="card">
+  <h3>Slow movers (≤ 5 units / 60 days)</h3>
+  <p class="muted small">Candidates for clearance, bundle, or de-listing.</p>
+  <table class="data-table" id="slowMoversTable">
+    <thead><tr><th>SKU</th><th>Name</th><th>Brand</th><th class="num">Units sold</th><th class="num">On hand</th><th class="num">Tied-up $</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<section class="card chart-card">
+  <h3>Demand forecast — next 30 days</h3>
+  <p class="muted small">Prophet model, retrained nightly by Airflow. Shaded band is 80% interval.</p>
+  <canvas id="forecastChart"></canvas>
+</section>
+
+<script src="/static/js/cube-client.js"></script>
+<script src="/static/js/dashboards-inventory.js"></script>
+{% endblock %}

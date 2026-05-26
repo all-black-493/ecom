@@ -1,0 +1,42 @@
+{
+  "$schema": "https://lookerstudio.google.com/report-theme.schema.json",
+  "version": "1",
+  "name": "Lumen — Information Design",
+  "report": {
+    "background": "#FAFAF8",
+    "fontFamily": "Inter",
+    "primaryColor": "#0F766E",
+    "secondaryColor": "#B45309",
+    "tertiaryColor": "#1F2937",
+    "borderColor": "#E5E7EB"
+  },
+  "colorPalette": [
+    "#0F766E",
+    "#1F2937",
+    "#B45309",
+    "#7E22CE",
+    "#0E7490",
+    "#9D174D",
+    "#365314",
+    "#475569"
+  ],
+  "components": {
+    "scorecard": {
+      "valueFontSize": 28,
+      "labelFontSize": 11,
+      "labelTextTransform": "uppercase",
+      "comparisonColor": "#0F766E"
+    },
+    "table": {
+      "headerBackground": "#FFFFFF",
+      "headerFontColor": "#6B7280",
+      "rowAlternateBackground": "transparent",
+      "borderColor": "#E5E7EB"
+    },
+    "chart": {
+      "gridColor": "#F3F4F6",
+      "axisColor": "#9CA3AF",
+      "showLegend": "bottom"
+    }
+  }
+}

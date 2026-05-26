@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Dashboards · Lumen{% endblock %}
+{% block content %}
+<section class="row">
+  <h1>Dashboards</h1>
+  <p class="muted">In-app dashboards powered by the Cube.dev semantic layer.
+    For long-horizon executive views see the Looker Studio reports.</p>
+
+  <div class="grid grid-2">
+    <a class="card dashboard-tile" href="/dashboards/sales">
+      <h3>Sales &amp; Revenue</h3>
+      <p>Daily revenue, channel mix, AOV by device, and gross margin by category.</p>
+    </a>
+    <a class="card dashboard-tile" href="/dashboards/inventory">
+      <h3>Inventory &amp; Velocity</h3>
+      <p>Fast/slow movers, stockout risk, and the latest Prophet demand forecast.</p>
+    </a>
+  </div>
+</section>
+{% endblock %}

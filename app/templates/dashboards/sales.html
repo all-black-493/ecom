@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Sales dashboard · Lumen{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+  window.CUBE_API_URL = "{{ cube_api_url }}";
+  window.CUBE_TOKEN = "{{ cube_token }}";
+</script>
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Sales &amp; Revenue</h1>
+    <p class="muted">Last 30 days. KPIs sourced from Cube.dev; numbers reconcile with Looker Studio.</p>
+  </div>
+  <div class="filter-bar">
+    <label>Range
+      <select id="rangeSelect">
+        <option value="7">7 days</option>
+        <option value="30" selected>30 days</option>
+        <option value="90">90 days</option>
+      </select>
+    </label>
+  </div>
+</header>
+
+<section class="kpi-row" id="kpi-row">
+  <div class="kpi"><span class="kpi-label">Revenue</span><span id="kpi-revenue" class="kpi-value">—</span></div>
+  <div class="kpi"><span class="kpi-label">Orders</span><span id="kpi-orders" class="kpi-value">—</span></div>
+  <div class="kpi"><span class="kpi-label">AOV</span><span id="kpi-aov" class="kpi-value">—</span></div>
+  <div class="kpi"><span class="kpi-label">Unique customers</span><span id="kpi-customers" class="kpi-value">—</span></div>
+</section>
+
+<section class="grid grid-2">
+  <div class="card chart-card">
+    <h3>Daily revenue</h3>
+    <p class="muted small">Bars: orders. Line: revenue. Weekly peaks indicate the weekend effect.</p>
+    <canvas id="revenueChart"></canvas>
+  </div>
+  <div class="card chart-card">
+    <h3>Revenue by channel</h3>
+    <p class="muted small">Ranked. Watch for paid_search ROAS — costs not shown here.</p>
+    <canvas id="channelChart"></canvas>
+  </div>
+</section>
+
+<section class="grid grid-2">
+  <div class="card chart-card">
+    <h3>Gross margin by category</h3>
+    <p class="muted small">Margin $ vs margin %. Big bars with thin lines = volume-low-margin.</p>
+    <canvas id="marginChart"></canvas>
+  </div>
+  <div class="card chart-card">
+    <h3>AOV by device</h3>
+    <p class="muted small">Mobile typically lags desktop AOV — drives funnel work.</p>
+    <canvas id="deviceChart"></canvas>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Top 10 products by revenue</h3>
+  <table class="data-table" id="topProductsTable">
+    <thead><tr><th>SKU</th><th>Name</th><th>Brand</th><th class="num">Units</th><th class="num">Revenue</th><th class="num">Margin</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<script src="/static/js/cube-client.js"></script>
+<script src="/static/js/dashboards-sales.js"></script>
+{% endblock %}
