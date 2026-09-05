@@ -7,6 +7,8 @@ instead of returning the API's 401.
 
 from __future__ import annotations
 
+from uuid import uuid4
+
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -34,6 +36,13 @@ router = APIRouter(tags=["pages"])
 templates = Jinja2Templates(directory="app/templates")
 
 SEE_OTHER = status.HTTP_303_SEE_OTHER
+
+# Query string on /static links. Random per process locally so an edited
+# stylesheet actually reloads; pinned to the app version elsewhere.
+_settings = get_settings()
+templates.env.globals["asset_v"] = (
+    uuid4().hex[:8] if _settings.app_env == "local" else _settings.app_version
+)
 
 
 def _cart_count(request: Request, db: Session, customer: Customer | None) -> int:
