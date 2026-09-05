@@ -42,7 +42,7 @@
 
   <div class="card">
     <h3>Summary</h3>
-    <dl>
+    <dl class="summary-list">
       <dt>Subtotal</dt><dd>${{ "%.2f"|format(order.subtotal) }}</dd>
       {% if order.discount_total > 0 %}
       <dt>Discount</dt><dd>−${{ "%.2f"|format(order.discount_total) }}</dd>
