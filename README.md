@@ -110,8 +110,8 @@ Note the query resolving against a pre-aggregation rather than the raw table:
 
 ![Airflow DAGs](docs/screenshots/11-airflow-dags.png)
 
-The hourly ETL fans 13 table extracts out to GCS, loads each into BigQuery,
-then refreshes the marts:
+The hourly ETL fans 12 table extracts out to GCS (4 dimensions full-refresh,
+8 fact tables incremental), loads each into BigQuery, then refreshes the marts:
 
 ![ETL DAG graph](docs/screenshots/12-airflow-etl-graph.png)
 
