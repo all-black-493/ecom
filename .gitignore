@@ -51,6 +51,9 @@ ml/sample_history.csv
 skills-lock.json
 .claude/
 
+# --- Playwright MCP scratch output ---------------------------------------------
+.playwright-mcp/
+
 # --- IDE & OS junk ------------------------------------------------------------
 .vscode/
 .idea/

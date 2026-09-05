@@ -61,6 +61,66 @@ resulting order lands in the same tables the dashboards read from.
 The full step-by-step (with verify commands at every step) is in
 [`RUNBOOK.md`](RUNBOOK.md). Run `make help` to see all targets.
 
+## See it running
+
+### Sales dashboard — Cube.dev semantic layer → Chart.js
+
+![Sales dashboard](docs/screenshots/08-dashboard-sales.png)
+
+### Storefront
+
+| Home | Catalog |
+|------|---------|
+| ![Home](docs/screenshots/01-storefront-home.png) | ![Catalog](docs/screenshots/02-catalog.png) |
+
+| Product detail | Sign in |
+|----------------|---------|
+| ![Product detail](docs/screenshots/03-product-detail.png) | ![Sign in](docs/screenshots/04-login.png) |
+
+### Purchase flow
+
+A guest can fill a cart before signing in; the cart is claimed on login and
+converted into an order that the analytics layer reads back immediately.
+
+| Cart (claimed after sign-in) | Checkout |
+|------------------------------|----------|
+| ![Cart](docs/screenshots/05-cart.png) | ![Checkout](docs/screenshots/06-checkout.png) |
+
+![Order confirmation](docs/screenshots/07-order-confirmation.png)
+
+### Inventory, velocity and the demand forecast
+
+![Inventory dashboard](docs/screenshots/09-dashboard-inventory.png)
+
+Prophet forecast with an 80 % prediction interval, retrained nightly by Airflow
+and published to `app/static/forecast.json`:
+
+![Prophet demand forecast](docs/screenshots/10-prophet-forecast.png)
+
+### Semantic layer
+
+The same Cube model backs both the in-app charts and ad-hoc analyst queries.
+Note the query resolving against a pre-aggregation rather than the raw table:
+
+| Playground | Generated SQL |
+|------------|---------------|
+| ![Cube playground](docs/screenshots/13-cube-playground.png) | ![Cube generated SQL](docs/screenshots/14-cube-generated-sql.png) |
+
+### Orchestration
+
+![Airflow DAGs](docs/screenshots/11-airflow-dags.png)
+
+The hourly ETL fans 13 table extracts out to GCS, loads each into BigQuery,
+then refreshes the marts:
+
+![ETL DAG graph](docs/screenshots/12-airflow-etl-graph.png)
+
+### API
+
+Every storefront action is also a documented JSON endpoint:
+
+![API docs](docs/screenshots/15-api-docs.png)
+
 ## Architecture
 
 ```
