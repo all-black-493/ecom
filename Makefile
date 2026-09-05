@@ -112,6 +112,12 @@ forecast: install-ml  ## train the Prophet demand model and publish forecast.jso
 	@echo "wrote app/static/forecast.json"
 	@echo "metrics: ml/forecast_metrics.json"
 
+.PHONY: deck
+deck: install  ## rebuild the board deck from live warehouse data
+	DATABASE_URL=$$(grep ^DATABASE_URL .env | cut -d= -f2-) \
+	  $(PY) scripts/build_deck.py
+	@echo "open docs/presentation/deck.html"
+
 # ------------------------------------------------------------------- tests
 .PHONY: smoke
 smoke:  ## hit every endpoint to verify a running stack

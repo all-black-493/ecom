@@ -61,64 +61,46 @@
   <h1>What the data is telling us<br>about Lumen.</h1>
   <p>A story in seven charts. No SQL required.</p>
   <p class="muted" style="margin-top:48px; font-size:16px;">
-    30 days ending 05 September 2026 · generated 05 September 2026
+    {{ window_label }} · generated {{ generated_at }}
   </p>
 </section>
 
 <section class="slide">
   <p class="pill">The headline</p>
-  <h2>We're contracting — and the revenue is concentrated.</h2>
+  <h2>{{ headline }}</h2>
   <p class="lede">
-    Revenue is down 1.8% against the prior
-    30 days. 3 channels carry 70.4% of it, and
-    10 products carry 79.6% of product revenue.
+    Revenue {{ kpi.revenue.direction }} {{ kpi.revenue.delta_pct }}% against the prior
+    {{ days }} days. {{ channel_top_n }} channels carry {{ channel_top_share }}% of it, and
+    {{ product_top_n }} products carry {{ product_top_share }}% of product revenue.
     Concentration is the question we leave the room with.
   </p>
 </section>
 
 <section class="slide">
   <p class="pill">Where we stand today</p>
-  <h2>The last 30 days</h2>
+  <h2>The last {{ days }} days</h2>
   <div class="kpis">
-    
+    {% for k in kpi_cards %}
     <div class="kpi">
-      <div class="label">Revenue</div>
-      <div class="n">$212k</div>
-      <div class="delta down">▼ 1.8% vs prior 30 days</div>
+      <div class="label">{{ k.label }}</div>
+      <div class="n">{{ k.value }}</div>
+      <div class="delta {{ k.direction_class }}">{{ k.arrow }} {{ k.delta_pct }}% vs prior {{ k.basis }} days</div>
     </div>
-    
-    <div class="kpi">
-      <div class="label">Orders</div>
-      <div class="n">1,650</div>
-      <div class="delta up">▲ 0.2% vs prior 30 days</div>
-    </div>
-    
-    <div class="kpi">
-      <div class="label">Repeat purchase rate (90d)</div>
-      <div class="n">97.1%</div>
-      <div class="delta up">▲ 0.8% vs prior 90 days</div>
-    </div>
-    
+    {% endfor %}
   </div>
   <p class="muted">Every figure on these slides is queried at build time. Nothing is typed in.</p>
 </section>
 
 <section class="slide">
   <p class="pill">Who's buying?</p>
-  <h2>3 channels do 70.4% of the work.</h2>
+  <h2>{{ channel_top_n }} channels do {{ channel_top_share }}% of the work.</h2>
   <div class="two-col">
-    <div class="chart">organic      ██████████████████  $62k
-paid_social  ██████████████      $50k
-paid_search  ████████████        $42k
-email        ████████            $27k
-direct       ██████              $21k
-referral     ████                $12k
-affiliate    ██                   $6k</div>
+    <div class="chart">{{ channel_chart }}</div>
     <div>
-      <p><strong>organic</strong> is the largest channel at
-         $62,215 (28.5% of revenue).</p>
-      <p>Highest average order value: <strong>paid_social</strong>
-         at $141.82, against a $128.30 book average.</p>
+      <p><strong>{{ channels[0].channel }}</strong> is the largest channel at
+         {{ channels[0].revenue_fmt }} ({{ channels[0].share }}% of revenue).</p>
+      <p>Highest average order value: <strong>{{ channel_best_aov.channel }}</strong>
+         at {{ channel_best_aov.aov_fmt }}, against a {{ kpi.aov.value }} book average.</p>
       <p class="muted"><em>Decision implication:</em> the smallest channels are where a
          percentage point costs least to buy. The largest is where it is worth most.</p>
     </div>
@@ -127,23 +109,14 @@ affiliate    ██                   $6k</div>
 
 <section class="slide">
   <p class="pill">What's selling?</p>
-  <h2>79.6% of revenue comes from 10 products.</h2>
+  <h2>{{ product_top_share }}% of revenue comes from {{ product_top_n }} products.</h2>
   <div class="two-col">
-    <div class="chart">LUM-01000  ██████████████████  $66k
-LUM-01003  ███████             $25k
-LUM-01001  ██████              $22k
-LUM-01004  ████                $13k
-LUM-01005  ███                 $11k
-LUM-01007  ███                 $10k
-LUM-01002  ██                   $7k
-LUM-01010  █                    $5k
-LUM-01009  █                    $5k
-LUM-01013  █                    $4k</div>
+    <div class="chart">{{ product_chart }}</div>
     <div>
       <p>The head-and-tail pattern most retailers see.</p>
-      <p>At the other end, <strong>39 active products sold
-         5 units or fewer in 60 days</strong>. They hold
-         <strong>$3.6M</strong> of inventory at cost.</p>
+      <p>At the other end, <strong>{{ slow_count }} active products sold
+         {{ slow_max_units }} units or fewer in {{ slow_window }} days</strong>. They hold
+         <strong>{{ slow_capital }}</strong> of inventory at cost.</p>
       <blockquote>Every dollar tied up in a slow mover is a dollar we couldn't use to
         restock a hero SKU.</blockquote>
     </div>
@@ -153,27 +126,20 @@ LUM-01013  █                    $4k</div>
 <section class="slide">
   <p class="pill">Where's the margin?</p>
   <h2>Revenue and margin don't rank the same.</h2>
-  <div class="chart">Electronics    ██████████████████  $38k
-Apparel        ███████             $14k
-Footwear       ███████             $14k
-Accessories    █████               $11k
-Home & Living  ██                   $5k
-Beauty         █                    $3k</div>
-  <p>Electronics leads on gross margin at $38,159.</p>
+  <div class="chart">{{ margin_chart }}</div>
+  <p>{{ margin_note }}</p>
 </section>
 
 <section class="slide">
   <p class="pill">Where are the leaks?</p>
-  <h2>84 in 100 shoppers never buy.</h2>
+  <h2>{{ funnel_headline }}</h2>
   <div class="two-col">
-    <div class="chart">Product views  ████████████████████  100.0%
-Added to cart  ████                   19.4%
-Purchased      ███                    16.3%</div>
+    <div class="chart">{{ funnel_chart }}</div>
     <div>
-      <p>The largest drop is <strong>product views → added to cart</strong>, losing
-         80.6% of the people who reach it.</p>
-      <p>At the current basket of $128.30, one extra percentage point through
-         that step is worth about <strong>$11k</strong> per 30 days.</p>
+      <p>The largest drop is <strong>{{ funnel_worst_step }}</strong>, losing
+         {{ funnel_worst_loss }}% of the people who reach it.</p>
+      <p>At the current basket of {{ kpi.aov.value }}, one extra percentage point through
+         that step is worth about <strong>{{ funnel_point_value }}</strong> per {{ days }} days.</p>
       <p class="note">Checkout-start is excluded: seeded carts and orders are not linked,
         so that step does not reconcile against the others.</p>
     </div>
@@ -183,16 +149,13 @@ Purchased      ███                    16.3%</div>
 <section class="slide">
   <p class="pill">Looking forward</p>
   <h2>What we expect, with confidence.</h2>
-  <div class="chart">peak $8k
-▇▄▁▁▁▁▃▇▄▁▁▂▂▄█▅▂▂▃▃▄█▅▂▂▃▂▄█▄
-trough $6k
-└─────────────────────────────► next 30 days</div>
-  <p>The model projects <strong>$205k</strong> over the next
-     30 days, within an 80% band of
-     <strong>$155k to $255k</strong>.</p>
-  <p>Backtested over 3 splits it lands within
-     <strong>17.1%</strong> of actual on average, and its 80% band held the
-     true value <strong>81.1%</strong> of the time — so the band is honest.</p>
+  <div class="chart">{{ forecast_chart }}</div>
+  <p>The model projects <strong>{{ forecast_total }}</strong> over the next
+     {{ forecast_days }} days, within an 80% band of
+     <strong>{{ forecast_low }} to {{ forecast_high }}</strong>.</p>
+  <p>Backtested over {{ metrics.n_splits }} splits it lands within
+     <strong>{{ metrics.mape_pct }}%</strong> of actual on average, and its 80% band held the
+     true value <strong>{{ metrics.coverage_pct }}%</strong> of the time — so the band is honest.</p>
   <p class="muted">It knows about weekly cycles, seasonality and trend. It does not know about
      promotions we haven't run, launches, or external shocks. Use the band, not the point.</p>
 </section>
@@ -202,13 +165,9 @@ trough $6k
   <h2>Three commitments for next quarter.</h2>
   <table class="summary">
     <tr><th>Initiative</th><th>Why</th><th>Estimated impact</th></tr>
-    
-    <tr><td>Fix the product views → added to cart step</td><td>Largest funnel drop at 81%</td><td>$11k per point, per 30 days</td></tr>
-    
-    <tr><td>Slow-mover clearance</td><td>39 products under 5 units in 60 days</td><td>Frees $3.6M at cost</td></tr>
-    
-    <tr><td>Shift spend toward paid_social</td><td>Highest AOV at $141.82 vs $128.30 book</td><td>$1,352 per 100 orders shifted</td></tr>
-    
+    {% for row in asks %}
+    <tr><td>{{ row.what }}</td><td>{{ row.why }}</td><td>{{ row.impact }}</td></tr>
+    {% endfor %}
   </table>
   <p class="source">Impacts are arithmetic on the figures above, not forecasts: one point of
      funnel movement at current AOV, and inventory valued at cost.</p>

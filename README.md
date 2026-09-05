@@ -44,7 +44,7 @@ business presentation.
 | BI / reports | Looker Studio (config + SQL views) | `docs/dashboards/looker-studio/` |
 | Advanced analytics | Prophet demand forecasting | `ml/` |
 | Deployment | Docker + Cloud Run / Railway | `deploy/` |
-| Business presentation | HTML reveal-style deck | `docs/presentation/` |
+| Business presentation | HTML deck generated from live data (`make deck`) | `docs/presentation/` |
 
 ## Quick start (local)
 
@@ -156,7 +156,7 @@ in the same dashboards.
 - [`docs/analytics-questions.md`](docs/analytics-questions.md) — the 18 questions this platform answers
 - [`docs/dashboard-design.md`](docs/dashboard-design.md) — information-design principles applied to each report
 - [`docs/dashboards/`](docs/dashboards/) — wire-frames and dashboard specs
-- [`docs/presentation/`](docs/presentation/) — business-user storytelling deck
+- [`docs/presentation/`](docs/presentation/) — business-user storytelling deck, rendered from the warehouse by `make deck`
 - [`warehouse/README.md`](warehouse/README.md) — star schema, grain, late-arriving rows
 - [`airflow/README.md`](airflow/README.md) — DAG topology, idempotency notes
 - [`ml/README.md`](ml/README.md) — forecasting methodology, evaluation

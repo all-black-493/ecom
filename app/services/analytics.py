@@ -14,13 +14,14 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 
-def _date_range(days_back: int) -> tuple[datetime, datetime]:
-    end = datetime.now(UTC)
+def _date_range(days_back: int, offset_days: int = 0) -> tuple[datetime, datetime]:
+    end = datetime.now(UTC) - timedelta(days=offset_days)
     return end - timedelta(days=days_back), end
 
 
-def kpi_summary(db: Session, days_back: int = 30) -> dict[str, Any]:
-    start, end = _date_range(days_back)
+def kpi_summary(db: Session, days_back: int = 30, offset_days: int = 0) -> dict[str, Any]:
+    """offset_days shifts the window back, for period-over-period comparisons."""
+    start, end = _date_range(days_back, offset_days)
     row = db.execute(
         text(
             """
@@ -165,8 +166,8 @@ def cart_abandonment(db: Session, days_back: int = 30) -> dict[str, Any]:
     return {**dict(row), "abandonment_rate": round(rate, 4)}
 
 
-def repeat_purchase_rate(db: Session, days_back: int = 90) -> dict[str, Any]:
-    start, end = _date_range(days_back)
+def repeat_purchase_rate(db: Session, days_back: int = 90, offset_days: int = 0) -> dict[str, Any]:
+    start, end = _date_range(days_back, offset_days)
     row = db.execute(
         text(
             """
