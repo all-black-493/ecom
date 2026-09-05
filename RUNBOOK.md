@@ -79,6 +79,14 @@ This runs `scripts/seed.py --reset` — drops the schema, recreates it, and
 loads 1,000 customers, 120 products, ~25k orders, 40k events,
 2,500 abandoned carts. Takes ~60–90 seconds.
 
+Two of those customers get a real password hash so you can sign in; the seed
+prints them when it finishes:
+
+| Email | Password |
+|-------|----------|
+| `demo@lumen.com` | `demo12345` |
+| `jane@lumen.com` | `shopper99` |
+
 **Verify:** `make shell` then `SELECT COUNT(*) FROM orders;` should return
 roughly 22,000–28,000.
 
@@ -95,7 +103,9 @@ make app
 | URL | What you should see |
 |-----|----------------------|
 | http://localhost:8000/ | Storefront home with category cards |
-| http://localhost:8000/catalog | Grid of products |
+| http://localhost:8000/catalog | Grid of products, each linking to its detail page |
+| http://localhost:8000/login | Sign in with one of the seeded demo accounts |
+| http://localhost:8000/cart | Cart — works before you sign in, and follows you through login |
 | http://localhost:8000/dashboards | Two tiles: Sales, Inventory |
 | http://localhost:8000/dashboards/sales | 4 KPIs, 4 charts, top-10 table |
 | http://localhost:8000/dashboards/inventory | Funnel, abandonment, stockout table, forecast chart |
@@ -341,10 +351,11 @@ and `docker-compose`.
 | Variable | Default in `.env.example` | Purpose | Must change locally? |
 |----------|---------------------------|---------|----------------------|
 | `APP_ENV` | `local` | Tagged into logs | No |
-| `APP_SECRET` | `change-me-in-prod` | Cookie signing, future auth | No (mode A) |
-| `APP_PORT` | `8000` | Where uvicorn listens | No |
+| `APP_SECRET` | `change-me-in-prod` | Signs the session JWT in the `lumen_session` cookie | **Yes — generate a random value** |
+| `APP_PORT` | `8000` | Where uvicorn listens; also what `make app`/`make smoke` target | Only if 8000 is taken |
 | `POSTGRES_HOST` | `localhost` | Used by host-network connections | No |
-| `POSTGRES_PORT` | `5432` | | No |
+| `POSTGRES_PORT` | `5432` | Postgres port *inside* the container network | No |
+| `POSTGRES_HOST_PORT` | `5432` | Host port compose publishes Postgres on | Only if 5432 is taken |
 | `POSTGRES_DB` | `lumen` | | No |
 | `POSTGRES_USER` | `lumen` | | No |
 | `POSTGRES_PASSWORD` | `lumen` | | No |

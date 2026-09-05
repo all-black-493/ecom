@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Create an account · Lumen{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <h1>Create an account</h1>
+  {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+  <form method="post" action="/register" class="auth-form">
+    <div class="form-row">
+      <label>First name
+        <input type="text" name="first_name" required autocomplete="given-name" autofocus>
+      </label>
+      <label>Last name
+        <input type="text" name="last_name" required autocomplete="family-name">
+      </label>
+    </div>
+    <label>Email
+      <input type="email" name="email" required autocomplete="email">
+    </label>
+    <label>Password
+      <input type="password" name="password" required minlength="8" autocomplete="new-password">
+      <span class="muted small">At least 8 characters.</span>
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" name="marketing_opt_in" value="true">
+      <span>Send me occasional updates (you can unsubscribe anytime).</span>
+    </label>
+    <button type="submit" class="btn primary">Create account</button>
+  </form>
+  <p class="muted small">Already have an account? <a href="/login">Sign in</a>.</p>
+</section>
+{% endblock %}

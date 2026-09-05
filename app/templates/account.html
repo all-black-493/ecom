@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Account · Lumen{% endblock %}
+{% block content %}
+<header class="page-header">
+  <h1>Your account</h1>
+</header>
+
+<section class="grid grid-2">
+  <div class="card">
+    <h3>Profile</h3>
+    <dl class="profile-list">
+      <dt>Name</dt><dd>{{ current_customer.first_name }} {{ current_customer.last_name }}</dd>
+      <dt>Email</dt><dd>{{ current_customer.email }}</dd>
+      <dt>Joined</dt><dd>{{ current_customer.created_at.strftime("%B %Y") }}</dd>
+      <dt>Country</dt><dd>{{ current_customer.signup_country }}</dd>
+      <dt>Marketing emails</dt><dd>{{ "Yes" if current_customer.marketing_opt_in else "No" }}</dd>
+    </dl>
+  </div>
+  <div class="card">
+    <h3>Quick links</h3>
+    <ul class="quick-links">
+      <li><a href="/orders">Your orders →</a></li>
+      <li><a href="/cart">Your cart →</a></li>
+      <li><a href="/catalog">Continue shopping →</a></li>
+    </ul>
+    <form method="post" action="/logout" class="inline-form" style="margin-top: 16px">
+      <button type="submit" class="btn ghost">Sign out</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

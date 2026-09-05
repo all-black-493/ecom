@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Cart · Lumen{% endblock %}
+{% block content %}
+<header class="page-header">
+  <h1>Your cart</h1>
+</header>
+
+{% if not items %}
+<section class="card empty-state">
+  <p>Your cart is empty.</p>
+  <a href="/catalog" class="btn primary">Browse the catalog</a>
+</section>
+{% else %}
+<section class="cart-layout">
+  <div class="cart-items">
+    {% for entry in items %}
+    <article class="cart-item">
+      <div class="cart-item-info">
+        <a href="/products/{{ entry.product.id }}" class="cart-item-name">{{ entry.product.name }}</a>
+        <div class="muted small">{{ entry.product.brand }} · {{ entry.product.sku }}</div>
+        <div class="muted small">${{ "%.2f"|format(entry.unit_price) }} each</div>
+      </div>
+      <form method="post" action="/cart/update" class="cart-qty-form">
+        <input type="hidden" name="item_id" value="{{ entry.id }}">
+        <input type="number" name="quantity" value="{{ entry.quantity }}" min="0" max="99">
+        <button type="submit" class="btn-small">Update</button>
+      </form>
+      <div class="cart-item-total">${{ "%.2f"|format(entry.line_total) }}</div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <aside class="cart-summary card">
+    <h3>Summary</h3>
+    <dl>
+      <dt>Items</dt><dd>{{ totals.item_count }}</dd>
+      <dt>Subtotal</dt><dd>${{ "%.2f"|format(totals.subtotal) }}</dd>
+      <dt>Shipping</dt><dd>${{ "%.2f"|format(totals.shipping) }}</dd>
+      <dt>Tax (8%)</dt><dd>${{ "%.2f"|format(totals.tax) }}</dd>
+      <dt class="total-row">Total</dt><dd class="total-row">${{ "%.2f"|format(totals.grand_total) }}</dd>
+    </dl>
+    {% if current_customer %}
+      <a href="/checkout" class="btn primary block">Checkout</a>
+    {% else %}
+      <a href="/login?next=/checkout" class="btn primary block">Sign in to checkout</a>
+    {% endif %}
+    <a href="/catalog" class="btn-link block">Continue shopping</a>
+  </aside>
+</section>
+{% endif %}
+{% endblock %}

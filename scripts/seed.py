@@ -20,9 +20,8 @@ Run after `docker compose up postgres` and `alembic upgrade head` (or
 from __future__ import annotations
 
 import argparse
-import math
 import random
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from uuid import uuid4
 
@@ -61,7 +60,14 @@ N_CUSTOMERS = 1_000
 N_PRODUCTS = 120
 N_ORDERS_TARGET = 25_000
 HISTORY_DAYS = 540  # ~18 months
-START = datetime.now(timezone.utc) - timedelta(days=HISTORY_DAYS)
+START = datetime.now(UTC) - timedelta(days=HISTORY_DAYS)
+
+# Accounts with a real password hash, so the storefront can be signed into
+# after seeding. Every other customer exists only as analytics data.
+DEMO_ACCOUNTS = [
+    ("demo@lumen.com", "demo12345", "Demo", "User"),
+    ("jane@lumen.com", "shopper99", "Jane", "Shopper"),
+]
 
 CATEGORIES = [
     ("apparel", "Apparel"),
@@ -172,9 +178,27 @@ def seed_catalog(db: Session) -> tuple[list[Product], list[ProductVariant]]:
 
 
 def seed_customers(db: Session) -> list[Customer]:
+    from app.services.auth import hash_password
+
     customers = []
-    for _ in range(N_CUSTOMERS):
-        # Older signups (further from now) get a boost in retention later
+
+    for email, password, first, last in DEMO_ACCOUNTS:
+        c = Customer(
+            email=email,
+            first_name=first,
+            last_name=last,
+            password_hash=hash_password(password),
+            signup_channel="direct",
+            signup_country="US",
+            marketing_opt_in=True,
+            created_at=START + timedelta(days=10),
+        )
+        db.add(c)
+        customers.append(c)
+
+    # The rest carry a placeholder hash — they shape the analytics data but
+    # cannot sign in.
+    for _ in range(N_CUSTOMERS - len(DEMO_ACCOUNTS)):
         created = START + timedelta(
             days=int(random.triangular(0, HISTORY_DAYS, HISTORY_DAYS * 0.3))
         )
@@ -384,7 +408,7 @@ def seed_carts_and_events(
 ) -> None:
     """Generate browsing events and abandoned carts."""
     # Last 90 days of events
-    start = datetime.now(timezone.utc) - timedelta(days=90)
+    start = datetime.now(UTC) - timedelta(days=90)
     for _ in range(40_000):
         when = start + timedelta(seconds=random.randint(0, 90 * 86_400))
         c = random.choice(customers) if random.random() < 0.6 else None
@@ -403,7 +427,7 @@ def seed_carts_and_events(
             )
         )
     # Abandoned carts (last 60 days)
-    abandoned_start = datetime.now(timezone.utc) - timedelta(days=60)
+    abandoned_start = datetime.now(UTC) - timedelta(days=60)
     for _ in range(2_500):
         created = abandoned_start + timedelta(seconds=random.randint(0, 60 * 86_400))
         c = random.choice(customers) if random.random() < 0.5 else None
@@ -452,6 +476,11 @@ def main() -> None:
         print("seeding events & carts…")
         seed_carts_and_events(db, customers, products)
         print("done.")
+        print()
+        print("sign in with:")
+        for email, password, *_ in DEMO_ACCOUNTS:
+            print(f"  {email}  /  {password}")
+        print("or register a new account at /register")
 
 
 if __name__ == "__main__":

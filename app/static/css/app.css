@@ -88,3 +88,95 @@ h3 { font-size: 15px; }
 
 .filter-bar select { padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px;
                      background: var(--card); }
+
+/* --- header / account nav ---------------------------------------------- */
+.topbar .primary-nav { display: flex; gap: 18px; }
+.topbar .account-nav { display: flex; gap: 14px; align-items: center; }
+.account-nav .cart-link { position: relative; }
+.cart-badge { display: inline-block; min-width: 18px; padding: 0 6px;
+              background: var(--accent); color: white; border-radius: 999px;
+              font-size: 11px; text-align: center; line-height: 18px; }
+.account-link { font-weight: 600; }
+.inline-form { display: inline; }
+.link-button { background: none; border: none; cursor: pointer;
+               color: var(--ink); font: inherit; padding: 0; }
+.link-button:hover { color: var(--accent); }
+.btn-small { padding: 4px 10px; font-size: 13px; border: 1px solid var(--line);
+             border-radius: 6px; background: var(--card); }
+.btn-small.primary { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* --- forms ------------------------------------------------------------- */
+.auth-shell { max-width: 420px; margin: 32px auto; padding: 32px; background: var(--card);
+              border: 1px solid var(--line); border-radius: 8px; }
+.auth-form { display: grid; gap: 14px; margin: 20px 0; }
+.auth-form label, .checkout-layout label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.auth-form input, .checkout-layout input, .cart-qty-form input {
+  padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px;
+  font: inherit; color: var(--ink); background: var(--card);
+}
+.auth-form button, .checkout-summary button { padding: 10px 16px; }
+.checkbox { flex-direction: row; align-items: center; gap: 8px; }
+.checkbox input { width: auto; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.alert { padding: 10px 14px; border-radius: 6px; font-size: 14px; margin-bottom: 16px; }
+.alert.error { background: #fee2e2; color: var(--danger); }
+.alert.success { background: #d1fae5; color: #065f46; }
+
+/* --- product detail --------------------------------------------------- */
+.breadcrumbs { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.breadcrumbs .sep { margin: 0 6px; color: var(--line); }
+.product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.product-media .product-placeholder { aspect-ratio: 1/1; background: var(--grid);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 96px; font-weight: 700; color: var(--muted); }
+.product-price-lg { font-size: 28px; font-weight: 700; margin: 12px 0; }
+.product-desc { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+.add-to-cart-form { display: flex; gap: 12px; align-items: end; margin: 20px 0; }
+.qty-field { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.qty-field input { width: 80px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; }
+.product-meta { list-style: none; padding: 0; margin: 16px 0; font-size: 13px; }
+.product-meta li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.product-meta strong { display: inline-block; min-width: 100px; color: var(--muted); font-weight: 500; }
+
+/* --- cart -------------------------------------------------------------- */
+.cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.cart-items { display: grid; gap: 12px; }
+.cart-item { display: grid; grid-template-columns: 1fr auto auto;
+             gap: 16px; align-items: center; padding: 16px;
+             background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+.cart-item-name { font-weight: 500; color: var(--ink); }
+.cart-item-name:hover { color: var(--accent); text-decoration: underline; }
+.cart-qty-form { display: flex; gap: 6px; align-items: center; }
+.cart-qty-form input { width: 60px; padding: 6px 8px; text-align: center; }
+.cart-item-total { font-weight: 600; font-variant-numeric: tabular-nums; }
+.cart-summary dl, .checkout-summary dl { display: grid; grid-template-columns: 1fr auto;
+  gap: 8px 16px; margin: 12px 0; font-variant-numeric: tabular-nums; }
+.cart-summary dt, .checkout-summary dt { color: var(--muted); }
+.total-row { font-weight: 700; font-size: 16px; border-top: 1px solid var(--line);
+             padding-top: 10px; margin-top: 6px; }
+.btn.block { display: block; width: 100%; text-align: center; margin-top: 12px; }
+.btn-link.block { display: block; text-align: center; margin-top: 8px; color: var(--muted); }
+
+/* --- checkout --------------------------------------------------------- */
+.checkout-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.checkout-summary .line { display: flex; justify-content: space-between; padding: 6px 0;
+  font-size: 14px; }
+.checkout-summary hr { border: none; border-top: 1px solid var(--line); margin: 12px 0; }
+
+/* --- orders ----------------------------------------------------------- */
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px;
+        font-size: 12px; font-weight: 500; background: var(--grid); color: var(--ink); }
+.pill.large { padding: 6px 14px; font-size: 14px; }
+.pill-paid, .pill-fulfilled, .pill-shipped { background: #d1fae5; color: #065f46; }
+.pill-delivered { background: var(--accent); color: white; }
+.pill-pending { background: #fef3c7; color: #92400e; }
+.pill-cancelled, .pill-refunded { background: #fee2e2; color: var(--danger); }
+
+/* --- account / misc --------------------------------------------------- */
+.profile-list { display: grid; grid-template-columns: 140px 1fr; gap: 8px 16px;
+                font-size: 14px; }
+.profile-list dt { color: var(--muted); }
+.quick-links { list-style: none; padding: 0; margin: 0; }
+.quick-links li { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state p { font-size: 16px; color: var(--muted); margin-bottom: 16px; }

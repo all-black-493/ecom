@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.order_number }} · Lumen{% endblock %}
+{% block content %}
+<nav class="breadcrumbs">
+  <a href="/orders">Orders</a> <span class="sep">›</span> {{ order.order_number }}
+</nav>
+
+<header class="page-header">
+  <div>
+    <h1>Order {{ order.order_number }}</h1>
+    <p class="muted">Placed {{ order.placed_at.strftime("%B %d, %Y at %I:%M %p UTC") }}</p>
+  </div>
+  <span class="pill pill-{{ order.status.value }} large">{{ order.status.value }}</span>
+</header>
+
+{% if order.status.value == 'paid' or order.status.value == 'fulfilled' or order.status.value == 'shipped' or order.status.value == 'delivered' %}
+<div class="alert success">
+  Thanks for your order! We've received it and will send a confirmation email shortly (in a real version of this app — for now this is the page that does that job).
+</div>
+{% endif %}
+
+<section class="grid grid-2">
+  <div class="card">
+    <h3>Items</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Product</th><th class="num">Qty</th><th class="num">Unit</th><th class="num">Line total</th></tr>
+      </thead>
+      <tbody>
+        {% for entry in items %}
+        <tr>
+          <td><a href="/products/{{ entry.product.id }}">{{ entry.product.name }}</a><br>
+              <span class="muted small">{{ entry.product.sku }}</span></td>
+          <td class="num">{{ entry.quantity }}</td>
+          <td class="num">${{ "%.2f"|format(entry.unit_price) }}</td>
+          <td class="num">${{ "%.2f"|format(entry.line_total) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Summary</h3>
+    <dl>
+      <dt>Subtotal</dt><dd>${{ "%.2f"|format(order.subtotal) }}</dd>
+      {% if order.discount_total > 0 %}
+      <dt>Discount</dt><dd>−${{ "%.2f"|format(order.discount_total) }}</dd>
+      {% endif %}
+      <dt>Shipping</dt><dd>${{ "%.2f"|format(order.shipping_total) }}</dd>
+      <dt>Tax</dt><dd>${{ "%.2f"|format(order.tax_total) }}</dd>
+      <dt class="total-row">Total</dt><dd class="total-row">${{ "%.2f"|format(order.grand_total) }}</dd>
+    </dl>
+    <p class="muted small">Order channel: {{ order.channel }} · Device: {{ order.device_type }}</p>
+  </div>
+</section>
+{% endblock %}

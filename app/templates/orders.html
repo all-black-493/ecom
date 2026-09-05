@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Your orders · Lumen{% endblock %}
+{% block content %}
+<header class="page-header">
+  <h1>Your orders</h1>
+</header>
+
+{% if not orders %}
+<section class="card empty-state">
+  <p>You haven't placed any orders yet.</p>
+  <a href="/catalog" class="btn primary">Start shopping</a>
+</section>
+{% else %}
+<section class="card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th class="num">Items</th>
+        <th class="num">Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{ o.order_number }}</td>
+        <td>{{ o.placed_at.strftime("%b %d, %Y") }}</td>
+        <td><span class="pill pill-{{ o.status.value }}">{{ o.status.value }}</span></td>
+        <td class="num">{{ o.items|length }}</td>
+        <td class="num">${{ "%.2f"|format(o.grand_total) }}</td>
+        <td><a href="/orders/{{ o.id }}">View →</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

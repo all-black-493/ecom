@@ -10,11 +10,26 @@
 <body>
   <header class="topbar">
     <a href="/" class="brand">Lumen</a>
-    <nav>
+    <nav class="primary-nav">
       <a href="/catalog">Catalog</a>
       <a href="/dashboards">Dashboards</a>
-      <a href="/docs">API docs</a>
+      <a href="/docs">API</a>
     </nav>
+    <div class="account-nav">
+      <a href="/cart" class="cart-link" aria-label="Cart">
+        Cart{% if cart_count %} <span class="cart-badge">{{ cart_count }}</span>{% endif %}
+      </a>
+      {% if current_customer %}
+        <a href="/orders">Orders</a>
+        <a href="/account" class="account-link">{{ current_customer.first_name }}</a>
+        <form action="/logout" method="post" class="inline-form">
+          <button type="submit" class="link-button">Sign out</button>
+        </form>
+      {% else %}
+        <a href="/login">Sign in</a>
+        <a href="/register" class="btn-small primary">Register</a>
+      {% endif %}
+    </div>
   </header>
   <main class="container">
     {% block content %}{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Checkout · Lumen{% endblock %}
+{% block content %}
+<header class="page-header">
+  <h1>Checkout</h1>
+  <p class="muted">Hello, {{ current_customer.first_name }}. Payment is mocked in this demo — no card is charged.</p>
+</header>
+
+{% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+
+<form method="post" action="/checkout" class="checkout-layout">
+  <section class="card">
+    <h3>Shipping address</h3>
+    <label>Address line 1
+      <input type="text" name="line1" required autocomplete="address-line1" placeholder="123 Main St">
+    </label>
+    <label>Address line 2
+      <input type="text" name="line2" autocomplete="address-line2" placeholder="Apt 4B (optional)">
+    </label>
+    <div class="form-row">
+      <label>City
+        <input type="text" name="city" required autocomplete="address-level2">
+      </label>
+      <label>State / Region
+        <input type="text" name="region" required autocomplete="address-level1">
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Postal code
+        <input type="text" name="postal_code" required autocomplete="postal-code">
+      </label>
+      <label>Country
+        <input type="text" name="country" required value="US" maxlength="2" autocomplete="country">
+      </label>
+    </div>
+    <label>Promo code (optional)
+      <input type="text" name="promo_code" placeholder="e.g. SUMMER20">
+    </label>
+  </section>
+
+  <aside class="checkout-summary card">
+    <h3>Order summary</h3>
+    {% for entry in items %}
+    <div class="line">
+      <span>{{ entry.product.name }} × {{ entry.quantity }}</span>
+      <span>${{ "%.2f"|format(entry.line_total) }}</span>
+    </div>
+    {% endfor %}
+    <hr>
+    <dl>
+      <dt>Subtotal</dt><dd>${{ "%.2f"|format(totals.subtotal) }}</dd>
+      <dt>Shipping</dt><dd>${{ "%.2f"|format(totals.shipping) }}</dd>
+      <dt>Tax</dt><dd>${{ "%.2f"|format(totals.tax) }}</dd>
+      <dt class="total-row">Total</dt><dd class="total-row">${{ "%.2f"|format(totals.grand_total) }}</dd>
+    </dl>
+    <button type="submit" class="btn primary block">Place order</button>
+    <p class="muted small">By placing your order, you agree to our (also mocked) terms.</p>
+  </aside>
+</form>
+{% endblock %}

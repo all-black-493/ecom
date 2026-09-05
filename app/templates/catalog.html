@@ -15,11 +15,11 @@
 <section class="results">
   <div class="grid grid-3">
     {% for p in products %}
-    <div class="card product">
+    <a class="card product" href="/products/{{ p.id }}">
       <div class="product-name">{{ p.name }}</div>
       <div class="product-brand">{{ p.brand }} · {{ p.sku }}</div>
       <div class="product-price">${{ "%.2f"|format(p.price) }}</div>
-    </div>
+    </a>
     {% endfor %}
   </div>
 </section>

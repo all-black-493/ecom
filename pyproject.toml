@@ -9,11 +9,11 @@ dependencies = [
     "sqlalchemy>=2.0",
     "psycopg2-binary>=2.9",
     "alembic>=1.13",
-    "pydantic>=2.9",
+    "pydantic[email]>=2.9",
     "pydantic-settings>=2.6",
     "jinja2>=3.1",
     "python-multipart>=0.0.12",
-    "passlib[bcrypt]>=1.7",
+    "bcrypt>=4.2",
     "python-jose[cryptography]>=3.3",
     "httpx>=0.27",
     "faker>=30.0",
@@ -48,10 +48,17 @@ dev = [
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+extend-exclude = ["ml/notebooks"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
-ignore = ["E501"]
+# UP042: the model enums subclass (str, Enum) on purpose — SQLAlchemy's Enum
+# column maps them by value and StrEnum changes str() output.
+ignore = ["E501", "UP042"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency injection is built on calls in argument defaults.
+extend-immutable-calls = ["fastapi.Body", "fastapi.Depends", "fastapi.Form", "fastapi.Query"]
 
 [build-system]
 requires = ["setuptools>=68"]

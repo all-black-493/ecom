@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} · Lumen{% endblock %}
+{% block content %}
+<nav class="breadcrumbs">
+  <a href="/catalog">Catalog</a> <span class="sep">›</span> {{ product.name }}
+</nav>
+
+<section class="product-detail">
+  <div class="product-media">
+    <div class="product-placeholder">{{ product.name[:1] }}</div>
+  </div>
+  <div class="product-info">
+    <h1>{{ product.name }}</h1>
+    <p class="muted">{{ product.brand }} · SKU {{ product.sku }}</p>
+    <p class="product-price-lg">${{ "%.2f"|format(product.price) }}</p>
+    <p class="product-desc">{{ product.description }}</p>
+
+    <form method="post" action="/cart/add" class="add-to-cart-form">
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <label class="qty-field">Quantity
+        <input type="number" name="quantity" value="1" min="1" max="10">
+      </label>
+      <button type="submit" class="btn primary">Add to cart</button>
+    </form>
+
+    <ul class="product-meta">
+      <li><strong>Brand</strong> {{ product.brand }}</li>
+      <li><strong>Weight</strong> {{ product.weight_grams }} g</li>
+      <li><strong>Launched</strong> {{ product.launched_at.strftime("%b %Y") }}</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

@@ -11,6 +11,7 @@ business presentation.
 | Layer | Stack | Path |
 |-------|-------|------|
 | Transactional app | FastAPI + SQLAlchemy + Jinja2 | `app/` |
+| Storefront flow | Register/login, cart, checkout, order history | `app/api/pages.py`, `app/services/` |
 | OLTP database | PostgreSQL 16 | `app/models/`, `scripts/seed.py` |
 | Seed data | Faker (1k customers, 500 SKUs, 25k orders) | `scripts/seed.py` |
 | Semantic layer | Cube.dev | `cube/` |
@@ -30,9 +31,12 @@ make app      # in a new terminal
 make smoke    # in a third terminal — green = working
 ```
 
-Open <http://localhost:8000>. The full step-by-step (with verify
-commands at every step) is in [`RUNBOOK.md`](RUNBOOK.md). Run
-`make help` to see all targets.
+Open <http://localhost:8000>. Sign in as `demo@lumen.com` / `demo12345` (the
+seed prints the demo accounts) to browse, add to a cart and check out — the
+resulting order lands in the same tables the dashboards read from.
+
+The full step-by-step (with verify commands at every step) is in
+[`RUNBOOK.md`](RUNBOOK.md). Run `make help` to see all targets.
 
 ## Architecture
 
