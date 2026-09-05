@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pandas as pd
 from sqlalchemy import create_engine, text
@@ -70,7 +70,7 @@ def copy_table(engine, project_id: str, dataset: str, table: str) -> int:
                 df[col] = df[col].astype(str)
 
     # Add the _ingested_at column that lumen_raw tables expect.
-    df["_ingested_at"] = datetime.now(timezone.utc)
+    df["_ingested_at"] = datetime.now(UTC)
 
     pandas_gbq.to_gbq(
         df,

@@ -16,7 +16,8 @@ PYTEST      := $(VENV)/bin/pytest
 RUFF        := $(VENV)/bin/ruff
 
 APP_HOST    ?= 0.0.0.0
-APP_PORT    ?= 8000
+# Read the port from .env so the app, smoke test and compose all agree.
+APP_PORT    ?= $(or $(shell sed -n 's/^APP_PORT=//p' .env 2>/dev/null),8000)
 APP_URL     := http://localhost:$(APP_PORT)
 CUBE_URL    := http://localhost:4000
 LOCUST_HOST ?= http://localhost:$(APP_PORT)

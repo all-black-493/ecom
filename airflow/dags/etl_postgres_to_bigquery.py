@@ -17,13 +17,14 @@ import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
     GCSToBigQueryOperator,
 )
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+
+from airflow import DAG
 
 # ----------------------------------------------------------------------- config
 

@@ -7,7 +7,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-lumen}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lumen}
     ports:
-      - "5432:5432"
+      # Host port is configurable so Lumen can coexist with other local
+      # Postgres containers. Keep it in sync with DATABASE_URL in .env.
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
       - lumen_pg:/var/lib/postgresql/data
     healthcheck:
@@ -30,7 +32,7 @@ services:
       CUBE_API_SECRET: ${CUBE_API_SECRET:-cube-secret-change-me}
       APP_SECRET: ${APP_SECRET:-dev-secret}
     ports:
-      - "8000:8000"
+      - "${APP_PORT:-8000}:8000"
     volumes:
       - ./app:/code/app
       - ./scripts:/code/scripts

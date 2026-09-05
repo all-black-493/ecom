@@ -7,8 +7,7 @@ and use SQL window functions where it expresses intent more clearly.
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone
-from decimal import Decimal
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from sqlalchemy import text
@@ -16,7 +15,7 @@ from sqlalchemy.orm import Session
 
 
 def _date_range(days_back: int) -> tuple[datetime, datetime]:
-    end = datetime.now(timezone.utc)
+    end = datetime.now(UTC)
     return end - timedelta(days=days_back), end
 
 

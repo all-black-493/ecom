@@ -10,7 +10,6 @@ Set FORECAST_GCS_URI=gs://bucket/forecast.json to enable the proxy.
 
 from __future__ import annotations
 
-import json
 import os
 import time
 from pathlib import Path

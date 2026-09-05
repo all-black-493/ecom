@@ -25,7 +25,6 @@ Usage:
 from __future__ import annotations
 
 import random
-from decimal import Decimal
 from uuid import uuid4
 
 from locust import HttpUser, between, task

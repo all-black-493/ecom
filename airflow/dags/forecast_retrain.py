@@ -12,8 +12,9 @@ import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from airflow import DAG
 from airflow.operators.python import PythonOperator
+
+from airflow import DAG
 
 GCP_PROJECT = os.environ["GCP_PROJECT_ID"]
 BQ_MART = os.environ.get("BQ_DATASET_MART", "lumen_mart")
@@ -58,8 +59,10 @@ def _train_and_publish(**context):
         all_forecasts.append(fcst)
 
     # Top-line
-    top = actuals.groupby("date", as_index=False)["revenue"].sum().rename(
-        columns={"date": "ds", "revenue": "y"}
+    top = (
+        actuals.groupby("date", as_index=False)["revenue"]
+        .sum()
+        .rename(columns={"date": "ds", "revenue": "y"})
     )
     m = Prophet(weekly_seasonality=True, yearly_seasonality=True, daily_seasonality=False)
     m.fit(top)
