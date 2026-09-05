@@ -35,24 +35,24 @@ async function loadRevenueByDay() {
   const days = currentRange();
   const out = await safeCube(
     {
-      measures: ["orders.revenue", "orders.count"],
-      timeDimensions: [{ dimension: "orders.placed_at", granularity: "day", dateRange: `last ${days} days` }],
+      measures: ["Orders.revenue", "Orders.count"],
+      timeDimensions: [{ dimension: "Orders.placedAt", granularity: "day", dateRange: `last ${days} days` }],
     },
     `/api/analytics/revenue-by-day?days=${days}`
   );
 
   const rows = out.rows;
-  const labels = rows.map((r) => r.day || r["orders.placed_at.day"]);
-  const revenue = rows.map((r) => Number(r.revenue ?? r["orders.revenue"] ?? 0));
-  const orders = rows.map((r) => Number(r.orders ?? r["orders.count"] ?? 0));
+  const labels = rows.map((r) => r.day || (r["Orders.placedAt.day"] || "").slice(0, 10));
+  const revenue = rows.map((r) => Number(r.revenue ?? r["Orders.revenue"] ?? 0));
+  const orders = rows.map((r) => Number(r.orders ?? r["Orders.count"] ?? 0));
 
   charts.revenue?.destroy();
   charts.revenue = new Chart(document.getElementById("revenueChart"), {
     data: {
       labels,
       datasets: [
-        { type: "bar", label: "Orders", data: orders, backgroundColor: "#e5e7eb", yAxisID: "y1" },
-        { type: "line", label: "Revenue", data: revenue, borderColor: COLORS[0], backgroundColor: COLORS[0], tension: 0.25, yAxisID: "y" },
+        { type: "bar", label: "Orders", data: orders, backgroundColor: "#e5e7eb", yAxisID: "y1", order: 1 },
+        { type: "line", label: "Revenue", data: revenue, borderColor: COLORS[0], backgroundColor: COLORS[0], tension: 0.25, yAxisID: "y", order: 0 },
       ],
     },
     options: {
